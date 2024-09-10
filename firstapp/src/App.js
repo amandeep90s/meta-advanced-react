@@ -1,42 +1,51 @@
 import React, { useState } from 'react';
-import './index.css';
-
-const ToDo = (props) => (
-  <tr>
-    <td>
-      <label>{props.id}</label>
-    </td>
-    <td>
-      <input type='text' />
-    </td>
-    <td>
-      <label>{props.createdAt}</label>
-    </td>
-  </tr>
-);
 
 const App = () => {
-  const [todos, setTodos] = useState([
-    { id: 'todo1', createdAt: '18:00' },
-    { id: 'todo2', createdAt: '20:30' },
-  ]);
+  const [score, setScore] = useState(10);
+  const [comment, setComment] = useState('');
 
-  const reverseOrder = () => {
-    // Reverse is a mutative operation, so we need to create a new array first.
-    setTodos([...todos].reverse());
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (Number(score) <= 5 && comment.length <= 10) {
+      alert('Please provide a comment explaining why the experience was poor.');
+      return false;
+    }
+    setScore(10);
+    setComment('');
   };
 
   return (
-    <div>
-      <button onClick={reverseOrder}>Reverse</button>
-
-      <table>
-        <tbody>
-          {todos.map((todo) => (
-            <ToDo key={todo.id} id={todo.id} createdAt={todo.createdAt} />
-          ))}
-        </tbody>
-      </table>
+    <div className='App'>
+      <form onSubmit={handleSubmit}>
+        <fieldset>
+          <h2>Feedback Form</h2>
+          <div className='field'>
+            <label htmlFor='score'>Score: {score}</label>
+            <input
+              type='range'
+              name='score'
+              id='score'
+              min={1}
+              max={10}
+              value={score}
+              onChange={(e) => setScore(e.target.value)}
+            />
+          </div>
+          <div className='field'>
+            <label htmlFor='comment'>Comment</label>
+            <textarea
+              name='comment'
+              id='comment'
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
+          </div>
+          <button type='submit' className='btn'>
+            Submit
+          </button>
+        </fieldset>
+      </form>
     </div>
   );
 };
