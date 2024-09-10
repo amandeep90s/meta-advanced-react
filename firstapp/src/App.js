@@ -1,52 +1,63 @@
-import React, { useState } from 'react';
+import React, { memo } from 'react';
+import { UserProvider, useUser } from './UserContext';
 
-const App = () => {
-  const [score, setScore] = useState(10);
-  const [comment, setComment] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (Number(score) <= 5 && comment.length <= 10) {
-      alert('Please provide a comment explaining why the experience was poor.');
-      return false;
-    }
-    setScore(10);
-    setComment('');
-  };
+const LoggedInUser = () => {
+  const { user } = useUser();
 
   return (
+    <p>
+      Hello <span className='username'>{user.name}</span>
+    </p>
+  );
+};
+
+const Header = () => {
+  return (
+    <header>
+      <h2>Blog App</h2>
+      <LoggedInUser />
+    </header>
+  );
+};
+
+const Page = () => {
+  const { user } = useUser();
+
+  return (
+    <>
+      <h2>What is lorem ipsum?</h2>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia hic
+        quaerat totam soluta eaque suscipit maxime velit, libero excepturi
+        reiciendis delectus illo iure doloribus quisquam fugiat impedit at nemo
+        numquam eius est laudantium. Ullam reiciendis officia iure blanditiis
+        optio veritatis culpa soluta et, impedit placeat nemo ipsa laboriosam,
+        earum natus provident fugiat, aut minus tempora deleniti! Modi odit ad,
+        ab eligendi temporibus fugiat soluta culpa! A ad possimus explicabo
+        ipsa, nulla sit sint dolore provident illum assumenda blanditiis
+        voluptatibus ullam labore, perferendis doloremque harum suscipit esse
+        quaerat numquam asperiores qui velit enim. Ducimus enim laudantium quo
+        obcaecati, veritatis eveniet sint?
+      </p>
+      <p>Written by {user.name}</p>
+    </>
+  );
+};
+
+const Root = memo(() => {
+  return (
     <div className='App'>
-      <form onSubmit={handleSubmit}>
-        <fieldset>
-          <h2>Feedback Form</h2>
-          <div className='field'>
-            <label htmlFor='score'>Score: {score}</label>
-            <input
-              type='range'
-              name='score'
-              id='score'
-              min={1}
-              max={10}
-              value={score}
-              onChange={(e) => setScore(e.target.value)}
-            />
-          </div>
-          <div className='field'>
-            <label htmlFor='comment'>Comment</label>
-            <textarea
-              name='comment'
-              id='comment'
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-            />
-          </div>
-          <button type='submit' className='btn'>
-            Submit
-          </button>
-        </fieldset>
-      </form>
+      <Header />
+      <Page />
     </div>
+  );
+});
+
+const App = () => {
+  return (
+    <UserProvider>
+      <Root />
+    </UserProvider>
   );
 };
 
